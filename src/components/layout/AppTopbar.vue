@@ -12,9 +12,17 @@
     </button>
 
     <!-- Greeting -->
-    <div>
-      <h1 class="text-base lg:text-xl font-bold text-gray-900">Good morning, Fajar 👋</h1>
-      <p class="hidden lg:block text-xs text-gray-400 mt-0.5">Here's what's happening with your store today.</p>
+    <div class="flex items-center gap-2">
+      <div>
+        <h1 class="text-base lg:text-xl font-bold text-gray-900 flex items-center gap-2">
+          Good morning, Fajar
+          <!-- Heroicon: hand-raised (wave) -->
+          <svg class="w-5 h-5 lg:w-6 lg:h-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1.575 1.575 0 10-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 013.15 0v1.5m-3.15 0l.07 5.695a1.575 1.575 0 01-.057.439l-.292.882a1.575 1.575 0 01-.657.878c-.292.182-.59.347-.897.497m0 0A1.575 1.575 0 019 14.25v-1.425m0 0a1.575 1.575 0 011.575-1.575H12m-3 2.999A1.575 1.575 0 019 14.25m1.05-1.425l-.07-5.695m0 0V4.575m0 0a1.575 1.575 0 013.15 0v1.5m0 0l.07 5.695m0 0a1.575 1.575 0 01-.057.439l-.292.882a1.575 1.575 0 01-.657.878c-.292.182-.59.347-.897.497m2.953-2.696l.07-5.695V4.575a1.575 1.575 0 013.15 0v6.75m-3.22 5.924A1.575 1.575 0 0015 14.25v-1.425m0 0a1.575 1.575 0 011.575-1.575H18"/>
+          </svg>
+        </h1>
+        <p class="hidden lg:block text-xs text-gray-400 mt-0.5">Here's what's happening with your store today.</p>
+      </div>
     </div>
 
     <!-- Kanan: Search + Notif -->
@@ -78,9 +86,9 @@
                   notif.read ? 'bg-white hover:bg-gray-50' : 'bg-brand-50/50 hover:bg-brand-50'
                 ]"
               >
-                <!-- Icon -->
-                <div :class="['w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-sm', notif.iconBg]">
-                  {{ notif.icon }}
+                <!-- Heroicon badge -->
+                <div :class="['w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0', notif.iconBg]">
+                  <component :is="notif.icon" :class="['w-4 h-4', notif.iconColor]" />
                 </div>
                 <!-- Text -->
                 <div class="flex-1 min-w-0">
@@ -109,75 +117,69 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { h, ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 defineEmits(['toggle-sidebar'])
 
+// Helper Heroicon
+const HeroIcon = (d) => ({
+  render: () => h('svg',
+    { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '2' },
+    [h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', d })]
+  )
+})
+
+// Icon per notifikasi
+const IconCart        = HeroIcon('M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z')
+const IconWarning     = HeroIcon('M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z')
+const IconUser        = HeroIcon('M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z')
+const IconCheck       = HeroIcon('M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z')
+const IconChart       = HeroIcon('M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z')
+
 const notifOpen = ref(false)
-const notifRef = ref(null)
+const notifRef  = ref(null)
 
 const notifications = ref([
   {
     id: 1,
-    icon: '🛒',
-    iconBg: 'bg-green-100',
+    icon: IconCart, iconBg: 'bg-green-100', iconColor: 'text-green-600',
     message: 'New order #ORD-2024-006 from Sarah Connor — Rp 540.000',
-    time: '2 minutes ago',
-    read: false,
+    time: '2 minutes ago', read: false,
   },
   {
     id: 2,
-    icon: '⚠️',
-    iconBg: 'bg-yellow-100',
+    icon: IconWarning, iconBg: 'bg-yellow-100', iconColor: 'text-yellow-600',
     message: 'Stock for Wireless Headphone is running low (5 left)',
-    time: '15 minutes ago',
-    read: false,
+    time: '15 minutes ago', read: false,
   },
   {
     id: 3,
-    icon: '👤',
-    iconBg: 'bg-blue-100',
+    icon: IconUser, iconBg: 'bg-blue-100', iconColor: 'text-blue-600',
     message: '3 new customers registered today',
-    time: '1 hour ago',
-    read: false,
+    time: '1 hour ago', read: false,
   },
   {
     id: 4,
-    icon: '✅',
-    iconBg: 'bg-purple-100',
+    icon: IconCheck, iconBg: 'bg-purple-100', iconColor: 'text-purple-600',
     message: 'Order #ORD-2024-001 has been delivered successfully',
-    time: '2 hours ago',
-    read: true,
+    time: '2 hours ago', read: true,
   },
   {
     id: 5,
-    icon: '📊',
-    iconBg: 'bg-pink-100',
+    icon: IconChart, iconBg: 'bg-pink-100', iconColor: 'text-pink-600',
     message: 'Monthly revenue report for May is ready to view',
-    time: '1 day ago',
-    read: true,
+    time: '1 day ago', read: true,
   },
 ])
 
 const unreadCount = computed(() => notifications.value.filter(n => !n.read).length)
 
-function toggleNotif() {
-  notifOpen.value = !notifOpen.value
-}
-
-function readNotif(id) {
-  const n = notifications.value.find(n => n.id === id)
-  if (n) n.read = true
-}
-
-function markAllRead() {
-  notifications.value.forEach(n => n.read = true)
-}
+function toggleNotif()  { notifOpen.value = !notifOpen.value }
+function readNotif(id)  { const n = notifications.value.find(n => n.id === id); if (n) n.read = true }
+function markAllRead()  { notifications.value.forEach(n => n.read = true) }
 
 function handleClickOutside(e) {
-  if (notifRef.value && !notifRef.value.contains(e.target)) {
-    notifOpen.value = false
-  }
+  if (notifRef.value && !notifRef.value.contains(e.target)) notifOpen.value = false
 }
 
 onMounted(() => document.addEventListener('mousedown', handleClickOutside))

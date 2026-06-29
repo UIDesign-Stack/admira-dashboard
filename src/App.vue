@@ -1,14 +1,12 @@
 <template>
   <div class="flex h-screen overflow-hidden bg-[#f4f5f9]">
 
-    <!-- Overlay mobile (klik untuk tutup) -->
     <div
       v-if="sidebarOpen"
       class="lg:hidden fixed inset-0 z-30 bg-black/30 backdrop-blur-sm"
       @click="sidebarOpen = false"
     />
 
-    <!-- Sidebar -->
     <AppSidebar
       :activeNav="activeNav"
       :isOpen="sidebarOpen"
@@ -16,11 +14,11 @@
       @close="sidebarOpen = false"
     />
 
-    <!-- Konten kanan -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <AppTopbar @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
-      <OverviewView v-if="activeNav === 'Overview'" />
+      <OverviewView   v-if="activeNav === 'Overview'" />
+      <AnalyticsView  v-else-if="activeNav === 'Analytics'" />
 
       <div v-else class="flex-1 flex items-center justify-center text-gray-400 text-sm">
         <div class="text-center">
@@ -35,10 +33,11 @@
 
 <script setup>
 import { ref } from 'vue'
-import AppSidebar   from '@/components/layout/AppSidebar.vue'
-import AppTopbar    from '@/components/layout/AppTopbar.vue'
-import OverviewView from '@/views/OverviewView.vue'
+import AppSidebar    from '@/components/layout/AppSidebar.vue'
+import AppTopbar     from '@/components/layout/AppTopbar.vue'
+import OverviewView  from '@/views/OverviewView.vue'
+import AnalyticsView from '@/views/AnalyticsView.vue'
 
-const activeNav    = ref('Overview')
-const sidebarOpen  = ref(false)
+const activeNav   = ref('Overview')
+const sidebarOpen = ref(false)
 </script>
