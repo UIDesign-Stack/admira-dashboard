@@ -20,6 +20,7 @@
       <OverviewView   v-if="activeNav === 'Overview'" />
       <AnalyticsView  v-else-if="activeNav === 'Analytics'" />
       <CustomersView  v-else-if="activeNav === 'Customers'" />
+      <ReportsView    v-else-if="activeNav === 'Reports'" />
 
       <div v-else class="flex-1 flex items-center justify-center text-gray-400 text-sm">
         <div class="text-center">
@@ -39,6 +40,7 @@ import AppTopbar     from '@/components/layout/AppTopbar.vue'
 import OverviewView  from '@/views/OverviewView.vue'
 import AnalyticsView from '@/views/AnalyticsView.vue'
 import CustomersView from '@/views/CustomersView.vue'
+import ReportsView   from '@/views/ReportsView.vue'
 
 const activeNav   = ref('Overview')
 const sidebarOpen = ref(false)
