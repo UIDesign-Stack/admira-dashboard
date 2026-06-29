@@ -94,7 +94,7 @@ function openModal(order = null) {
   showModal.value = true
 }
 
-// UI only — tidak ada validasi & tidak disimpan ke backend, hanya mengubah state lokal
+
 function saveOrder() {
   if (editingOrder.value) {
     const idx = orders.value.findIndex(o => o.id === editingOrder.value.id)

@@ -21,7 +21,7 @@ const IconWarning   = HeroIcon('M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.6
 // ── Static reference data ─────────────────────────────────────────────────
 export const categories = ['All', 'Audio', 'Electronics', 'Peripherals', 'Accessories', 'Others']
 
-// Opsi icon yang bisa dipilih saat tambah/edit produk
+
 export const iconOptions = [
   { key: 'headphone', label: 'Headphone', icon: IconHeadphone, iconBg: 'bg-purple-50', iconColor: 'text-purple-500' },
   { key: 'watch',     label: 'Watch',     icon: IconWatch,     iconBg: 'bg-blue-50',   iconColor: 'text-blue-500'  },
@@ -40,9 +40,6 @@ const stats = [
 ]
 
 // ── Shared state ─────────────────────────────────────────────────────────────
-// Didefinisikan di module scope (bukan di dalam useProducts()) supaya semua
-// komponen yang memanggil useProducts() berbagi state yang SAMA (singleton),
-// mirip pattern store sederhana tanpa perlu Pinia.
 const search         = ref('')
 const activeCategory = ref('All')
 const viewMode       = ref('grid')
@@ -81,7 +78,7 @@ function openModal(product = null) {
   showModal.value = true
 }
 
-// UI only — tidak ada validasi & tidak disimpan ke backend, hanya mengubah state lokal
+
 function saveProduct() {
   const meta = getIconMeta(form.value.iconKey)
 
