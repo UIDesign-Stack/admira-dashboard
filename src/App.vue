@@ -19,6 +19,8 @@
 
       <OverviewView   v-if="activeNav === 'Overview'" />
       <AnalyticsView  v-else-if="activeNav === 'Analytics'" />
+      <Productsview   v-else-if="activeNav === 'Products'" />
+      <Ordersview     v-else-if="activeNav === 'Orders'" />
 
       <div v-else class="flex-1 flex items-center justify-center text-gray-400 text-sm">
         <div class="text-center">
@@ -37,6 +39,8 @@ import AppSidebar    from '@/components/layout/AppSidebar.vue'
 import AppTopbar     from '@/components/layout/AppTopbar.vue'
 import OverviewView  from '@/views/OverviewView.vue'
 import AnalyticsView from '@/views/AnalyticsView.vue'
+import Productsview from '@/views/Productsview.vue'
+import Ordersview from '@/views/Ordersview.vue'
 
 const activeNav   = ref('Overview')
 const sidebarOpen = ref(false)
