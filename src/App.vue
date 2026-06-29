@@ -19,6 +19,8 @@
 
       <OverviewView   v-if="activeNav === 'Overview'" />
       <AnalyticsView  v-else-if="activeNav === 'Analytics'" />
+      <OrderView v-else-if="activeNav === 'Orders'" />
+      <ProductsView v-else-if="activeNav === 'Products'" />
       <CustomersView  v-else-if="activeNav === 'Customers'" />
       <ReportsView    v-else-if="activeNav === 'Reports'" />
 
@@ -39,6 +41,8 @@ import AppSidebar    from '@/components/layout/AppSidebar.vue'
 import AppTopbar     from '@/components/layout/AppTopbar.vue'
 import OverviewView  from '@/views/OverviewView.vue'
 import AnalyticsView from '@/views/AnalyticsView.vue'
+import OrderView from '@/views/OrdersView.vue'
+import ProductsView from '@/views/ProductsView.vue'
 import CustomersView from '@/views/CustomersView.vue'
 import ReportsView   from '@/views/ReportsView.vue'
 
