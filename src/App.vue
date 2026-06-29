@@ -23,6 +23,7 @@
       <ProductsView v-else-if="activeNav === 'Products'" />
       <CustomersView  v-else-if="activeNav === 'Customers'" />
       <ReportsView    v-else-if="activeNav === 'Reports'" />
+      <SettingsView    v-else-if="activeNav === 'Settings'" />
 
       <div v-else class="flex-1 flex items-center justify-center text-gray-400 text-sm">
         <div class="text-center">
@@ -45,6 +46,7 @@ import OrderView from '@/views/OrdersView.vue'
 import ProductsView from '@/views/ProductsView.vue'
 import CustomersView from '@/views/CustomersView.vue'
 import ReportsView   from '@/views/ReportsView.vue'
+import SettingsView   from '@/views/SettingsView.vue'
 
 const activeNav   = ref('Overview')
 const sidebarOpen = ref(false)
