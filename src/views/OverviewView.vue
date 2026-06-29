@@ -39,91 +39,81 @@
           </button>
         </div>
 
-        <!--
-          Layout chart:
-          - Flex row: kolom Y-labels (fixed 36px) + kolom SVG (flex-1)
-          - SVG pakai preserveAspectRatio="xMidYMid meet" → circle tidak oval
-          - viewBox: 500 x 200 (chart area 0-140, tooltip area 140-165, X-labels 165-185)
-          - Semua elemen di dalam SVG → scale bersama, tidak pernah offset
-        -->
-        <div class="flex items-start gap-0">
+        <!-- SVG chart: Y-labels sekarang di dalam SVG agar selalu sinkron dengan grid -->
+        <div class="w-full" style="position:relative; padding-bottom:42%;">
+          <svg
+            viewBox="0 0 560 235"
+            style="position:absolute; top:0; left:0; width:100%; height:100%; overflow:visible;"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+              </linearGradient>
+              <filter id="ttShadow" x="-30%" y="-40%" width="160%" height="220%">
+                <feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#00000018"/>
+              </filter>
+            </defs>
 
-          <!-- Y labels — sejajar dengan chart area (y=5 sampai y=138 dalam viewBox) -->
-          <div class="flex-shrink-0 flex flex-col justify-between text-right pr-2"
-               style="width:36px; height:160px; padding-top:4px; padding-bottom:46px;">
-            <span class="text-[10px] text-gray-400 leading-none">150M</span>
-            <span class="text-[10px] text-gray-400 leading-none">100M</span>
-            <span class="text-[10px] text-gray-400 leading-none">50M</span>
-            <span class="text-[10px] text-gray-400 leading-none">0</span>
-          </div>
-
-          <!-- Chart SVG -->
-          <div class="flex-1 min-w-0">
             <!--
-              viewBox 500x185:
-                - chart area: y 0-140
-                - X labels: y 155-175
-              preserveAspectRatio xMidYMid meet → circle tetap bulat, chart tidak squish
-              padding-bottom trick: height = width * (185/500) → responsive di semua lebar
+              Layout area:
+                x: 44 → 560  (chart width = 516, kiri 44px untuk Y-labels)
+                y: 10 → 170  (chart height = 160)
+                y: 185 → 200 (X labels)
             -->
-            <div class="w-full" style="position:relative; padding-bottom:37%;">
-              <svg
-                viewBox="0 0 500 185"
-                style="position:absolute; top:0; left:0; width:100%; height:100%; overflow:visible;"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <defs>
-                  <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.18"/>
-                    <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
-                  </linearGradient>
-                  <filter id="ttShadow" x="-30%" y="-40%" width="160%" height="220%">
-                    <feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#00000018"/>
-                  </filter>
-                </defs>
 
-                <!-- Grid lines (chart area 0-140) -->
-                <line x1="0" y1="5"   x2="500" y2="5"   stroke="#f3f4f6" stroke-width="1"/>
-                <line x1="0" y1="51"  x2="500" y2="51"  stroke="#f3f4f6" stroke-width="1"/>
-                <line x1="0" y1="97"  x2="500" y2="97"  stroke="#f3f4f6" stroke-width="1"/>
-                <line x1="0" y1="138" x2="500" y2="138" stroke="#f3f4f6" stroke-width="1"/>
+            <!-- Grid lines + Y labels -->
+            <!-- 150M → y=10 -->
+            <line x1="44" y1="10"  x2="560" y2="10"  stroke="#f3f4f6" stroke-width="1"/>
+            <text x="38" y="14"  text-anchor="end" font-size="11" fill="#9ca3af">150M</text>
 
-                <!-- Area fill -->
-                <path :d="areaPath" fill="url(#areaGrad)"/>
+            <!-- 100M → y=63 -->
+            <line x1="44" y1="63"  x2="560" y2="63"  stroke="#f3f4f6" stroke-width="1"/>
+            <text x="38" y="67"  text-anchor="end" font-size="11" fill="#9ca3af">100M</text>
 
-                <!-- Line chart -->
-                <path :d="linePath" fill="none" stroke="#7c3aed" stroke-width="2.5"
-                      stroke-linejoin="round" stroke-linecap="round"/>
+            <!-- 50M → y=116 -->
+            <line x1="44" y1="116" x2="560" y2="116" stroke="#f3f4f6" stroke-width="1"/>
+            <text x="38" y="120" text-anchor="end" font-size="11" fill="#9ca3af">50M</text>
 
-                <!-- Dashed vertical: dari bawah tooltip sampai dot -->
-                <line
-                  :x1="TX" :y1="TY - 44"
-                  :x2="TX" :y2="TY - 8"
-                  stroke="#7c3aed" stroke-width="1.2"
-                  stroke-dasharray="3,3" opacity="0.45"
-                />
+            <!-- 0 → y=170 -->
+            <line x1="44" y1="170" x2="560" y2="170" stroke="#f3f4f6" stroke-width="1"/>
+            <text x="38" y="174" text-anchor="end" font-size="11" fill="#9ca3af">0</text>
 
-                <!-- Dot aktif -->
-                <circle :cx="TX" :cy="TY" r="5" fill="#7c3aed"/>
-                <circle :cx="TX" :cy="TY" r="10" fill="#7c3aed" fill-opacity="0.12"/>
+            <!-- Area fill -->
+            <path :d="areaPath" fill="url(#areaGrad)"/>
 
-                <!-- Tooltip bubble -->
-                <g :transform="`translate(${clampX}, ${TY - 52})`">
-                  <rect x="0" y="0" width="116" height="44" rx="9" fill="white" filter="url(#ttShadow)"/>
-                  <rect x="0" y="0" width="116" height="44" rx="9" fill="none" stroke="#ede9fe" stroke-width="0.8"/>
-                  <text x="58" y="16" text-anchor="middle" font-size="10" fill="#9ca3af" font-weight="500">22 May</text>
-                  <text x="58" y="33" text-anchor="middle" font-size="11.5" fill="#111827" font-weight="700">Rp 94.450.000</text>
-                </g>
+            <!-- Line chart -->
+            <path :d="linePath" fill="none" stroke="#7c3aed" stroke-width="2.5"
+                  stroke-linejoin="round" stroke-linecap="round"/>
 
-                <!-- X labels (di bawah chart area, y=160) -->
-                <text x="0"   y="160" font-size="11" fill="#9ca3af" text-anchor="start">1 May</text>
-                <text x="125" y="160" font-size="11" fill="#9ca3af" text-anchor="middle">8 May</text>
-                <text x="250" y="160" font-size="11" fill="#9ca3af" text-anchor="middle">15 May</text>
-                <text x="375" y="160" font-size="11" fill="#9ca3af" text-anchor="middle">22 May</text>
-                <text x="500" y="160" font-size="11" fill="#9ca3af" text-anchor="end">31 May</text>
-              </svg>
-            </div>
-          </div>
+            <!-- Dashed vertical line -->
+            <line
+              :x1="TX" :y1="TY - 50"
+              :x2="TX" :y2="TY - 8"
+              stroke="#7c3aed" stroke-width="1.2"
+              stroke-dasharray="3,3" opacity="0.45"
+            />
+
+            <!-- Dot aktif -->
+            <circle :cx="TX" :cy="TY" r="5"  fill="#7c3aed"/>
+            <circle :cx="TX" :cy="TY" r="10" fill="#7c3aed" fill-opacity="0.12"/>
+
+            <!-- Tooltip bubble -->
+            <g :transform="`translate(${clampX}, ${TY - 58})`">
+              <rect x="0" y="0" width="116" height="44" rx="9" fill="white" filter="url(#ttShadow)"/>
+              <rect x="0" y="0" width="116" height="44" rx="9" fill="none" stroke="#ede9fe" stroke-width="0.8"/>
+              <text x="58" y="16" text-anchor="middle" font-size="10" fill="#9ca3af" font-weight="500">22 May</text>
+              <text x="58" y="33" text-anchor="middle" font-size="11.5" fill="#111827" font-weight="700">Rp 94.450.000</text>
+            </g>
+
+            <!-- X labels -->
+            <text x="44"  y="200" font-size="11" fill="#9ca3af" text-anchor="start">1 May</text>
+            <text x="173" y="200" font-size="11" fill="#9ca3af" text-anchor="middle">8 May</text>
+            <text x="302" y="200" font-size="11" fill="#9ca3af" text-anchor="middle">15 May</text>
+            <text x="431" y="200" font-size="11" fill="#9ca3af" text-anchor="middle">22 May</text>
+            <text x="560" y="200" font-size="11" fill="#9ca3af" text-anchor="end">31 May</text>
+          </svg>
         </div>
       </div>
 
@@ -217,23 +207,31 @@
         </div>
       </div>
     </div>
-
     <!-- Advanced Analytics Banner -->
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex items-center gap-4 overflow-hidden relative">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 overflow-hidden relative">
+      <!-- Background blur decorations -->
       <div class="absolute right-24 top-0 w-32 h-32 bg-brand-100 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
       <div class="absolute right-8 bottom-0 w-24 h-24 bg-purple-100 rounded-full blur-2xl opacity-30 pointer-events-none"></div>
-      <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-100 to-purple-100 flex items-center justify-center flex-shrink-0">
-        <svg class="w-6 h-6 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-        </svg>
+
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <!-- Icon -->
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-100 to-purple-100 flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+
+        <!-- Text -->
+        <div class="flex-1 min-w-0">
+          <h3 class="text-sm font-bold text-gray-900">Get more insights with Advanced Analytics</h3>
+          <p class="text-xs text-gray-400 mt-0.5">Unlock detailed insights, track performance in real-time, and grow your business faster.</p>
+        </div>
+
+        <!-- Button: full width di mobile, auto di desktop -->
+        <button class="w-full sm:w-auto flex-shrink-0 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-700 text-white text-xs font-semibold hover:opacity-90 transition-opacity whitespace-nowrap">
+          Explore Analytics
+        </button>
       </div>
-      <div class="flex-1 min-w-0">
-        <h3 class="text-sm font-bold text-gray-900">Get more insights with Advanced Analytics</h3>
-        <p class="text-xs text-gray-400 mt-0.5">Unlock detailed insights, track performance in real-time, and grow your business faster.</p>
-      </div>
-      <button class="flex-shrink-0 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-700 text-white text-xs font-semibold hover:opacity-90 transition-opacity whitespace-nowrap">
-        Explore Analytics
-      </button>
     </div>
 
   </main>
@@ -272,37 +270,27 @@ const stats = [
   },
 ]
 
-// ─── Chart ───────────────────────────────────────────────────────────────────
-// viewBox 500 x 185
-//   - chart area : y 0 → 140
-//   - X labels   : y 155 → 175
-//   - Skala Y    : 0M (y=138) .. 150M (y=5)  [sedikit padding atas/bawah]
-const VBW   = 500
-const VBH   = 185
-const CH    = 140   // chart height
-const YPAD  = 5     // padding atas agar garis teratas tidak terpotong
+// Chart area: x 44→560, y 10→170
+const CHART_X_START = 44
+const CHART_X_END   = 560
+const CHART_Y_TOP   = 10
+const CHART_Y_BOT   = 170
 const MIN_V = 0
 const MAX_V = 150
 
-const sy = v => CH - ((v - MIN_V) / (MAX_V - MIN_V)) * (CH - YPAD) + YPAD - CH + CH
-// sederhananya:
-const scaleY = v => YPAD + (1 - (v - MIN_V) / (MAX_V - MIN_V)) * (CH - YPAD * 2)
-const scaleX = i => (i / 30) * VBW
+const scaleY = v => CHART_Y_TOP + (1 - (v - MIN_V) / (MAX_V - MIN_V)) * (CHART_Y_BOT - CHART_Y_TOP)
+const scaleX = i => CHART_X_START + (i / 30) * (CHART_X_END - CHART_X_START)
 
 const rawData = [8,12,10,18,22,15,28,32,20,25,35,28,30,42,38,45,50,44,60,55,68,72,65,78,82,75,90,88,95,100,148]
 const points  = rawData.map((v, i) => ({ x: scaleX(i), y: scaleY(v) }))
 
 const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')
-const areaPath = linePath + ` L${VBW},${CH} L0,${CH} Z`
+const areaPath = linePath + ` L${CHART_X_END},${CHART_Y_BOT} L${CHART_X_START},${CHART_Y_BOT} Z`
 
-// Titik aktif index 21 = "22 May"
-const TIDX = 21
-const TX   = points[TIDX].x          // ≈ 350
-const TY   = points[TIDX].y          // ≈ 72
-
-// Clamp bubble (width=116) agar tidak keluar viewBox
-const clampX = computed(() => Math.min(Math.max(TX - 58, 2), VBW - 118))
-
+const TIDX   = 21
+const TX     = points[TIDX].x
+const TY     = points[TIDX].y
+const clampX = computed(() => Math.min(Math.max(TX - 58, CHART_X_START + 2), CHART_X_END - 118))
 // ─── Data ────────────────────────────────────────────────────────────────────
 const recentOrders = [
   { id: '#ORD-2024-001', name: 'John Doe',       status: 'Completed',  amount: 'Rp 250.000', time: '2m ago' },
