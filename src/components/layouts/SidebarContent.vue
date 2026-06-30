@@ -112,12 +112,14 @@
 
 <script setup>
 import { h, ref, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
 
 defineProps({ activeNav: String })
 defineEmits(['nav-change'])
 
+const router       = useRouter()
 const userMenuOpen = ref(false)
-const userMenuRef = ref(null)
+const userMenuRef  = ref(null)
 
 const icon = (d) => ({
   render: () => h('svg',
@@ -155,7 +157,10 @@ const userMenuItems = [
 
 function handleUserMenu(item) {
   userMenuOpen.value = false
-  // handle action here (e.g. router.push, logout, etc.)
+  if (item.label === 'Sign Out') {
+    localStorage.removeItem('admira_token')
+    router.push('/login')
+  }
 }
 
 function handleClickOutside(e) {

@@ -65,10 +65,11 @@
             <p class="text-[10px] text-gray-400 mt-0.5">Show only icons in the sidebar, hide labels</p>
           </div>
           <button @click="form.compact = !form.compact"
-            :class="['relative rounded-full transition-colors flex-shrink-0', form.compact ? 'bg-brand-500' : 'bg-gray-200']"
-            style="height:22px; width:40px;">
-            <span :class="['absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform',
-              form.compact ? 'translate-x-5' : 'translate-x-0.5']"></span>
+            :class="['relative rounded-full transition-colors duration-200 flex-shrink-0 flex items-center',
+              form.compact ? 'bg-brand-500' : 'bg-gray-200']"
+            style="width:44px; height:24px; padding: 2px;">
+            <span :class="['w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200',
+              form.compact ? 'translate-x-5' : 'translate-x-0']"></span>
           </button>
         </div>
       </div>

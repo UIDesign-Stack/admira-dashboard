@@ -20,11 +20,11 @@
             </div>
             <!-- Toggle -->
             <button @click="item.enabled = !item.enabled"
-              :class="['relative w-10 h-5.5 rounded-full transition-colors flex-shrink-0',
+              :class="['relative rounded-full transition-colors duration-200 flex-shrink-0 flex items-center',
                 item.enabled ? 'bg-brand-500' : 'bg-gray-200']"
-              style="height:22px; width:40px;">
-              <span :class="['absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform',
-                item.enabled ? 'translate-x-5' : 'translate-x-0.5']"></span>
+              style="width:44px; height:24px; padding: 2px;">
+              <span :class="['w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200',
+                item.enabled ? 'translate-x-5' : 'translate-x-0']"></span>
             </button>
           </div>
         </div>
