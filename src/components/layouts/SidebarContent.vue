@@ -157,6 +157,15 @@ const userMenuItems = [
 
 function handleUserMenu(item) {
   userMenuOpen.value = false
+  if (item.label === 'My Profile') {
+    router.push({ name: 'Profile' })
+  }
+  if (item.label === 'Account Settings') {
+    router.push({ name: 'Settings' })
+  }
+  if (item.label === 'Help & Support') {
+    router.push({ name: 'HelpSupport' })
+  }
   if (item.label === 'Sign Out') {
     localStorage.removeItem('admira_token')
     router.push('/login')
