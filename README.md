@@ -9,6 +9,12 @@
 
 Admira Dashboard adalah template admin panel modern berbasis **Vue 3** dan **Vite**, didesain untuk mengelola data bisnis seperti produk, pesanan, pelanggan, dan laporan — semuanya dalam satu tampilan yang bersih dan responsif.
 
+<img width="1850" height="915" alt="Login" src="https://github.com/user-attachments/assets/de890271-b918-4e70-977d-a12db332334b" />
+<img width="1915" height="941" alt="Setting" src="https://github.com/user-attachments/assets/d7149af3-4b78-4de7-88d2-c19795f2ea81" />
+<img width="1889" height="934" alt="profile" src="https://github.com/user-attachments/assets/e5c237a2-01d5-4994-8733-9eee711fd72c" />
+<img width="1902" height="941" alt="Signup" src="https://github.com/user-attachments/assets/8d76e0c8-6956-401c-9966-a3f848d7a57e" />
+<img width="1896" height="933" alt="forgot" src="https://github.com/user-attachments/assets/74fa81d7-54f4-4883-ab18-f91b1831c69e" />
+
 ---
 
 ## ✨ Fitur Utama
